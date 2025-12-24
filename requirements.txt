@@ -1,3 +1,8 @@
 discord.py==2.3.2
 python-dotenv
 colorama
+requests
+aiohttp
+aiohttp-socks
+pytz
+pyzipper
