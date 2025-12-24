@@ -52,7 +52,7 @@ def check_and_install_requirements():
     return False
 
 if __name__ == "__main__":
-    check_and_install_requirements()
+    pass
     
     import discord
     from discord.ext import commands
@@ -241,14 +241,7 @@ if __name__ == "__main__":
 
     init(autoreset=True)
 
-    token_file = 'bot_token.txt'
-    if not os.path.exists(token_file):
-        bot_token = input("Enter the bot token: ")
-        with open(token_file, 'w') as f:
-            f.write(bot_token)
-    else:
-        with open(token_file, 'r') as f:
-            bot_token = f.read().strip()
+    bot_token = os.getenv("BOT_TOKEN")
 
     if not os.path.exists('db'):
         os.makedirs('db')
@@ -360,8 +353,8 @@ if __name__ == "__main__":
             print(f"Error syncing commands: {e}")
 
     async def main():
-        if check_and_install_requirements():
-            print(f"{Fore.GREEN}Library installations completed, starting bot...{Style.RESET_ALL}")
+        # if check_and_install_requirements():
+        #    print(f"{Fore.GREEN}Library installations completed, starting bot...{Style.RESET_ALL}")
         
         await check_and_update_files()
         await load_cogs()
