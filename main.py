@@ -163,32 +163,6 @@ async def check_and_update_files():
         print(Fore.YELLOW + f"Version check error: {e}" + Style.RESET_ALL)
         return
 
-# =====================
-# LOAD COGS
-# =====================
-
-async def load_cogs():
-    cogs = [
-        "olddb",
-        "control",
-        "alliance",
-        "alliance_member_operations",
-        "bot_operations",
-        "logsystem",
-        "support_operations",
-        "gift_operations",
-        "changes",
-        "w",
-        "wel",
-        "other_features",
-        "bear_trap",
-        "id_channel",
-        "backup_operations",
-        "bear_trap_editor",
-    ]
-
-    for cog in cogs:
-        await bot.load_extension(f"cogs.{cog}")
 
 # =====================
 # EVENTS
@@ -196,23 +170,38 @@ async def load_cogs():
 
 class CustomBot(commands.Bot):
     async def setup_hook(self):
-        await load_cogs()
-        await self.tree.sync()
-        print(Fore.GREEN + "Slash commands synced." + Style.RESET_ALL)
+        cogs = [
+            "olddb",
+            "control",
+            "alliance",
+            "alliance_member_operations",
+            "bot_operations",
+            "logsystem",
+            "support_operations",
+            "gift_operations",
+            "changes",
+            "w",
+            "wel",
+            "other_features",
+            "bear_trap",
+            "id_channel",
+            "backup_operations",
+            "bear_trap_editor",
+        ]
 
-    async def on_error(self, event_name, *args, **kwargs):
-        if event_name == "on_interaction":
-            error = sys.exc_info()[1]
-            if isinstance(error, discord.NotFound) and error.code == 10062:
-                return
-        await super().on_error(event_name, *args, **kwargs)
+        for cog in cogs:
+            await self.load_extension(f"cogs.{cog}")
+
+        # 🔥 이 줄이 핵심
+        await self.tree.sync()
+
+        print(Fore.GREEN + "Slash commands synced." + Style.RESET_ALL)
 
 # =====================
 # MAIN
 # =====================
 
 async def main():
-    await check_and_update_files()
     await bot.start(BOT_TOKEN)
 
 if __name__ == "__main__":
