@@ -242,6 +242,8 @@ if __name__ == "__main__":
     init(autoreset=True)
 
     bot_token = os.getenv("BOT_TOKEN")
+    if not bot_token:
+    raise RuntimeError("BOT_TOKEN environment variable not set")
 
     if not os.path.exists('db'):
         os.makedirs('db')
