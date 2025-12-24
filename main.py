@@ -194,13 +194,18 @@ async def load_cogs():
 # EVENTS
 # =====================
 
-@bot.event
-async def on_ready():
-    print(Fore.GREEN + f"Logged in as {bot.user}" + Style.RESET_ALL)
-    try:
-        await bot.tree.sync()
-    except Exception as e:
-        print("Command sync error:", e)
+class CustomBot(commands.Bot):
+    async def setup_hook(self):
+        await load_cogs()
+        await self.tree.sync()
+        print(Fore.GREEN + "Slash commands synced." + Style.RESET_ALL)
+
+    async def on_error(self, event_name, *args, **kwargs):
+        if event_name == "on_interaction":
+            error = sys.exc_info()[1]
+            if isinstance(error, discord.NotFound) and error.code == 10062:
+                return
+        await super().on_error(event_name, *args, **kwargs)
 
 # =====================
 # MAIN
@@ -208,7 +213,6 @@ async def on_ready():
 
 async def main():
     await check_and_update_files()
-    await load_cogs()
     await bot.start(BOT_TOKEN)
 
 if __name__ == "__main__":
